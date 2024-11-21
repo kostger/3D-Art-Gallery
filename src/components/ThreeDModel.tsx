@@ -1,17 +1,33 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { gsap } from "gsap";
 
-const ThreeDModel = ({ onLoadComplete, onMoveCamera }) => {
-  const mountRef = useRef(null);
-  const cameraRef = useRef(null); // Ref for the camera
-  const sceneRef = useRef(null); // Ref for the scene
+type ThreeDModelProps = {
+  onLoadComplete?: () => void;
+  onMoveCamera?: (
+    moveFn: (coordinates: {
+      position: THREE.Vector3;
+      lookAt: THREE.Vector3;
+    }) => void
+  ) => void;
+};
+
+const ThreeDModel: React.FC<ThreeDModelProps> = ({
+  onLoadComplete,
+  onMoveCamera,
+}) => {
+  const mountRef = useRef<HTMLDivElement | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
 
   useEffect(() => {
-    const loadingManager = new THREE.LoadingManager(() => {
-      if (onLoadComplete) onLoadComplete();
-    });
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
+    renderer.outputEncoding = THREE.sRGBEncoding;
 
     const scene = new THREE.Scene();
     sceneRef.current = scene;
@@ -26,22 +42,13 @@ const ThreeDModel = ({ onLoadComplete, onMoveCamera }) => {
     camera.lookAt(0, 5, 0);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    mountRef.current.appendChild(renderer.domElement);
-
-    const gltfLoader = new GLTFLoader(loadingManager);
-    gltfLoader.load("../../public/amor_und_psyche.glb", (gltf) => {
-      const model = gltf.scene;
-      scene.add(model);
-    });
+    if (mountRef.current) {
+      mountRef.current.appendChild(renderer.domElement);
+    }
 
     const cursorLight = new THREE.PointLight(0xffffff, 100, 100);
     scene.add(cursorLight);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
     scene.add(ambientLight);
     const updateLightPosition = (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -52,33 +59,48 @@ const ThreeDModel = ({ onLoadComplete, onMoveCamera }) => {
 
     window.addEventListener("mousemove", updateLightPosition);
 
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load("/amor_und_psyche.glb", (gltf) => {
+      scene.add(gltf.scene);
+      if (onLoadComplete) onLoadComplete();
+    });
+
     const animate = () => {
-      requestAnimationFrame(animate);
       renderer.render(scene, camera);
+      requestAnimationFrame(animate);
     };
     animate();
 
-    // Expose the moveCamera method
     if (onMoveCamera) {
       onMoveCamera(({ position, lookAt }) => {
-        gsap.to(camera.position, {
-          x: position.x,
-          y: position.y,
-          z: position.z,
-          duration: 1.5,
-        });
-        gsap.to(camera, {
-          onUpdate: () => {
-            camera.lookAt(lookAt.x, lookAt.y, lookAt.z);
-          },
-          duration: 1.5,
-        });
+        gsap.to(camera.position, { ...position, duration: 1.5 });
+        gsap.to(
+          {},
+          {
+            onUpdate: () => camera.lookAt(lookAt.x, lookAt.y, lookAt.z),
+            duration: 1.5,
+          }
+        );
       });
     }
 
     return () => {
-      mountRef.current.removeChild(renderer.domElement);
-      window.removeEventListener("mousemove", updateLightPosition);
+      renderer.dispose();
+      scene.traverse((object) => {
+        if ((object as THREE.Mesh).geometry)
+          (object as THREE.Mesh).geometry.dispose();
+        if ((object as THREE.Mesh).material) {
+          const material = (object as THREE.Mesh).material;
+          if (Array.isArray(material)) {
+            material.forEach((mat) => mat.dispose());
+          } else {
+            material.dispose();
+          }
+        }
+      });
+      if (mountRef.current) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
     };
   }, [onLoadComplete, onMoveCamera]);
 

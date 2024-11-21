@@ -1,49 +1,97 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import ThreeDModel from "./ThreeDModel";
+import { TEXTS } from "../assets/constants";
+
+type Coordinates = {
+  position: { x: number; y: number; z: number };
+  lookAt: { x: number; y: number; z: number };
+};
 
 function Hero() {
-  const titleRef = useRef(null);
-  const textRef = useRef(null);
+  const titleRefLeft = useRef<HTMLHeadingElement | null>(null);
+  const titleRefRight = useRef<HTMLHeadingElement | null>(null);
+  const titleRefCenter = useRef<HTMLHeadingElement | null>(null);
   const [modelLoaded, setModelLoaded] = useState(false);
-  const moveCameraRef = useRef(null); // Ref to control the camera movement
+  const moveCameraRef = useRef<(coordinates: Coordinates) => void | null>(null);
+  const currentTextRef = useRef<HTMLParagraphElement | null>(null);
+
+  const COORDINATES: Record<string, Coordinates> = {
+    AMOR: {
+      position: { x: -6, y: 7, z: 2 },
+      lookAt: { x: 0, y: 7, z: 0 },
+    },
+    UND: {
+      position: { x: 1, y: 1, z: 8 },
+      lookAt: { x: 0, y: 7, z: 0 },
+    },
+    PSYCHE: {
+      position: { x: -4, y: 7, z: 4 },
+      lookAt: { x: 0, y: 7, z: 0 },
+    },
+  };
 
   useEffect(() => {
     if (modelLoaded) {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 3, delay: 2 }
+      const animations: gsap.core.Tween[] = [];
+
+      animations.push(
+        gsap.fromTo(
+          titleRefLeft.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 3, delay: 2 }
+        ),
+        gsap.fromTo(
+          titleRefRight.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 3, delay: 3 }
+        ),
+        gsap.fromTo(
+          titleRefCenter.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 3, delay: 4 }
+        )
       );
-      gsap.fromTo(
-        textRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 3, delay: 4 }
-      );
+
+      const breatheAnimation = (ref: HTMLElement | null) => {
+        if (!ref) return;
+        animations.push(
+          gsap.to(ref, {
+            scale: 1.02,
+            duration: 1.1,
+            repeat: -1,
+            yoyo: true,
+            ease: "power1.inOut",
+          })
+        );
+      };
+
+      breatheAnimation(titleRefLeft.current);
+      breatheAnimation(titleRefRight.current);
+      breatheAnimation(titleRefCenter.current);
+
+      return () => animations.forEach((animation) => animation.kill());
     }
   }, [modelLoaded]);
 
-  const moveCamera = (coordinates) => {
+  const handleClick = (text: string, coordinates: Coordinates) => {
+    if (currentTextRef.current) {
+      currentTextRef.current.textContent = text;
+    }
+
     if (moveCameraRef.current) {
       moveCameraRef.current(coordinates);
     }
+
+    gsap.fromTo(
+      currentTextRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 3, delay: 1.5 }
+    );
   };
 
   return (
     <div className="relative w-full h-screen">
-      {!modelLoaded && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 2,
-            color: "#fff",
-            fontSize: "24px",
-          }}
-        ></div>
-      )}
       <ThreeDModel
         onLoadComplete={() => setModelLoaded(true)}
         onMoveCamera={(moveFn) => (moveCameraRef.current = moveFn)}
@@ -51,55 +99,30 @@ function Hero() {
       {modelLoaded && (
         <>
           <h1
-            ref={titleRef}
-            className="absolute top-1/4 left-10 text-[40px] text-gray-500 cursor-pointer hover:text-white "
-            onClick={() =>
-              moveCamera({
-                position: { x: -6, y: 7, z: 2 },
-                lookAt: { x: 0, y: 7, z: 0 },
-              })
-            }
+            ref={titleRefLeft}
+            className="absolute top-1/4 left-10 text-[40px] text-gray-500 cursor-pointer hover:text-white"
+            onClick={() => handleClick(TEXTS.AMOR, COORDINATES.AMOR)}
           >
             Amor
           </h1>
           <h1
-            ref={titleRef}
-            className="absolute top-1/4 left-40 text-[40px] text-gray-500 cursor-pointer  hover:text-white"
-            onClick={() =>
-              moveCamera({
-                position: { x: -10, y: 5, z: 8 },
-                lookAt: { x: 0, y: 5, z: 0 },
-              })
-            }
+            ref={titleRefRight}
+            className="absolute top-1/4 left-40 text-[40px] text-gray-500 cursor-pointer hover:text-white"
+            onClick={() => handleClick(TEXTS.UND, COORDINATES.UND)}
           >
             und
           </h1>
           <h1
-            ref={titleRef}
-            className="absolute top-1/3 left-40 text-[40px] text-gray-500 hover:text-white  cursor-pointer"
-            onClick={() =>
-              moveCamera({
-                position: { x: -4, y: 7, z: 4 },
-                lookAt: { x: 0, y: 7, z: 0 },
-              })
-            }
+            ref={titleRefCenter}
+            className="absolute top-1/3 left-40 text-[40px] text-gray-500 hover:text-white cursor-pointer"
+            onClick={() => handleClick(TEXTS.PSYCHE, COORDINATES.PSYCHE)}
           >
             Psyche
           </h1>
           <p
-            ref={textRef}
+            ref={(el) => (currentTextRef.current = el)}
             className="absolute bottom-1/4 right-4 w-[300px] text-wrap text-gray-500"
-          >
-            *"Amor und Psyche" (or Cupid and Psyche) is a timeless myth of love
-            and trust, originally found in Metamorphoses by the Roman author
-            Apuleius. The story narrates the trials of Psyche, a mortal woman
-            whose beauty rivals that of Venus, earning the goddess's wrath.
-            Psyche's journey leads her to fall in love with Amor (Cupid),
-            Venus's son, though their union is tested by secrecy and challenges
-            imposed by the gods. It symbolizes the transformative power of love,
-            the triumph of perseverance, and the harmony between human emotions
-            and divine forces.
-          </p>
+          ></p>
         </>
       )}
     </div>
