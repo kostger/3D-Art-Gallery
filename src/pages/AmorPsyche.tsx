@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import ThreeDModel from "./ThreeDModel";
+import ThreeDModel from "../components/ThreeDModel";
 import { TEXTS } from "../assets/constants";
+import * as THREE from "three";
 
 type Coordinates = {
   position: { x: number; y: number; z: number };
   lookAt: { x: number; y: number; z: number };
 };
 
-function Hero() {
+function AmorPsyche() {
   const titleRefLeft = useRef<HTMLHeadingElement | null>(null);
   const titleRefRight = useRef<HTMLHeadingElement | null>(null);
   const titleRefCenter = useRef<HTMLHeadingElement | null>(null);
@@ -93,9 +94,14 @@ function Hero() {
   return (
     <div className="relative w-full h-screen">
       <ThreeDModel
+        modelName="/amor_und_psyche.glb"
+        initialPosition={new THREE.Vector3(0, 0, 11)}
+        initialLookAt={new THREE.Vector3(0, 5, 0)}
+        initialModelPosition={new THREE.Vector3(0, 0, 0)}
         onLoadComplete={() => setModelLoaded(true)}
         onMoveCamera={(moveFn) => (moveCameraRef.current = moveFn)}
       />
+
       {modelLoaded && (
         <>
           <h1
@@ -129,4 +135,4 @@ function Hero() {
   );
 }
 
-export default Hero;
+export default AmorPsyche;

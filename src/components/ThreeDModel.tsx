@@ -2,8 +2,11 @@ import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { gsap } from "gsap";
-
 type ThreeDModelProps = {
+  modelName: string;
+  initialPosition: THREE.Vector3;
+  initialLookAt: THREE.Vector3;
+  initialModelPosition?: THREE.Vector3; // Add this new prop
   onLoadComplete?: () => void;
   onMoveCamera?: (
     moveFn: (coordinates: {
@@ -14,6 +17,10 @@ type ThreeDModelProps = {
 };
 
 const ThreeDModel: React.FC<ThreeDModelProps> = ({
+  modelName,
+  initialPosition,
+  initialLookAt,
+  initialModelPosition = new THREE.Vector3(0, 0, 0), // Default to (0, 0, 0)
   onLoadComplete,
   onMoveCamera,
 }) => {
@@ -38,30 +45,33 @@ const ThreeDModel: React.FC<ThreeDModelProps> = ({
       0.1,
       1000
     );
-    camera.position.set(0, 0, 11);
-    camera.lookAt(0, 5, 0);
+    camera.position.copy(initialPosition);
+    camera.lookAt(initialLookAt);
     cameraRef.current = camera;
 
     if (mountRef.current) {
       mountRef.current.appendChild(renderer.domElement);
     }
 
-    const cursorLight = new THREE.PointLight(0xffffff, 100, 100);
+    const cursorLight = new THREE.PointLight(0xffffff, 150, 100);
     scene.add(cursorLight);
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
     scene.add(ambientLight);
-    const updateLightPosition = (event) => {
+
+    const updateLightPosition = (event: MouseEvent) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = -(event.clientY / window.innerHeight) * 2 + 1;
       cursorLight.position.set(x * 50, y * 50, 10);
-      cursorLight.lookAt(0, 5, 0);
     };
 
     window.addEventListener("mousemove", updateLightPosition);
 
     const gltfLoader = new GLTFLoader();
-    gltfLoader.load("/amor_und_psyche.glb", (gltf) => {
-      scene.add(gltf.scene);
+    gltfLoader.load(modelName, (gltf) => {
+      const model = gltf.scene;
+      model.position.copy(initialModelPosition); // Set model's initial position
+      scene.add(model);
+
       if (onLoadComplete) onLoadComplete();
     });
 
@@ -102,7 +112,14 @@ const ThreeDModel: React.FC<ThreeDModelProps> = ({
         mountRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [onLoadComplete, onMoveCamera]);
+  }, [
+    modelName,
+    initialPosition,
+    initialLookAt,
+    initialModelPosition,
+    onLoadComplete,
+    onMoveCamera,
+  ]);
 
   return <div ref={mountRef} />;
 };

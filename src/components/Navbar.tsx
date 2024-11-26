@@ -1,15 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, RefObject } from "react";
 import { gsap } from "gsap";
+import { Link } from "react-router-dom";
 
 function Navbar() {
-  const navbarRef = useRef(null);
+  const navbarRef: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
-    gsap.fromTo(
-      navbarRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 2, delay: 1 }
-    );
+    if (navbarRef.current) {
+      gsap.fromTo(
+        navbarRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 2, delay: 1 }
+      );
+    }
   }, []);
 
   return (
@@ -19,10 +22,18 @@ function Navbar() {
     >
       <nav>
         <ul className="text-gray-600 flex justify-center gap-16 p-2">
-          <li className="hover:text-white">Art</li>
-          <li className="hover:text-white">About</li>
-          <li className="hover:text-white">Shop</li>
-          <li className="hover:text-white">Visit</li>
+          <li className="hover:text-white">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="hover:text-white">
+            <Link to="/shop">Sculptures</Link>
+          </li>
+          <li className="hover:text-white">
+            <Link to="/about">About</Link>
+          </li>
+          <li className="hover:text-white">
+            <Link to="/visit">Visit</Link>
+          </li>
         </ul>
       </nav>
     </div>
