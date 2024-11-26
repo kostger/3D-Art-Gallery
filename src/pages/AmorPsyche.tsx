@@ -100,6 +100,8 @@ function AmorPsyche() {
         initialModelPosition={new THREE.Vector3(0, 0, 0)}
         onLoadComplete={() => setModelLoaded(true)}
         onMoveCamera={(moveFn) => (moveCameraRef.current = moveFn)}
+        lightIntensity={100}
+        lightDistance={10}
       />
 
       {modelLoaded && (

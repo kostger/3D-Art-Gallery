@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import * as THREE from "three";
 import ThreeDModel from "../components/ThreeDModel";
+import { HerculesTexts } from "../assets/constants";
 
 type Coordinates = {
   position: { x: number; y: number; z: number };
@@ -12,19 +13,18 @@ const HerculesArchelous: React.FC = () => {
   const moveCameraRef = useRef<(coordinates: Coordinates) => void | null>(null);
   const currentTextRef = useRef<HTMLParagraphElement | null>(null);
 
-  const TEXTS = {
-    HERCULES: "Hercules: The hero of Greek mythology.",
-    ARCHELOUS: "Archelous: The river god and adversary of Hercules.",
-  };
-
   const COORDINATES: Record<string, Coordinates> = {
     HERCULES: {
-      position: { x: 2, y: 6, z: 10 },
+      position: { x: 20, y: -55, z: 15 },
       lookAt: { x: 0, y: 6, z: 0 },
     },
     ARCHELOUS: {
       position: { x: -5, y: 4, z: 8 },
       lookAt: { x: 0, y: 5, z: 0 },
+    },
+    FIGHTING: {
+      position: { x: 0, y: 0, z: 180 },
+      lookAt: { x: 0, y: 0, z: 0 },
     },
   };
 
@@ -53,18 +53,32 @@ const HerculesArchelous: React.FC = () => {
         initialModelPosition={new THREE.Vector3(-90, -120, 0)}
         onLoadComplete={() => setModelLoaded(true)}
         onMoveCamera={(moveFn) => (moveCameraRef.current = moveFn)}
+        lightIntensity={200}
+        lightDistance={3}
       />
       {modelLoaded && (
         <>
           <h1
             className="absolute top-1/4 left-10 text-[40px] text-gray-500 cursor-pointer hover:text-white"
-            onClick={() => handleClick(TEXTS.HERCULES, COORDINATES.HERCULES)}
+            onClick={() =>
+              handleClick(HerculesTexts.HERCULES, COORDINATES.HERCULES)
+            }
           >
             Hercules
           </h1>
           <h1
-            className="absolute top-1/4 left-40 text-[40px] text-gray-500 cursor-pointer hover:text-white"
-            onClick={() => handleClick(TEXTS.ARCHELOUS, COORDINATES.ARCHELOUS)}
+            className="absolute top-1/4 left-60 text-[40px] text-gray-500 cursor-pointer hover:text-white"
+            onClick={() =>
+              handleClick(HerculesTexts.SCULPTURE, COORDINATES.FIGHTING)
+            }
+          >
+            Fighting
+          </h1>
+          <h1
+            className="absolute top-1/3 left-40 text-[40px] text-gray-500 cursor-pointer hover:text-white"
+            onClick={() =>
+              handleClick(HerculesTexts.ACHELOUS, COORDINATES.ARCHELOUS)
+            }
           >
             Archelous
           </h1>

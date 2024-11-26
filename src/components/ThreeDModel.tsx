@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { gsap } from "gsap";
 type ThreeDModelProps = {
+  lightIntensity: number;
+  lightDistance: number;
   modelName: string;
   initialPosition: THREE.Vector3;
   initialLookAt: THREE.Vector3;
@@ -17,6 +19,8 @@ type ThreeDModelProps = {
 };
 
 const ThreeDModel: React.FC<ThreeDModelProps> = ({
+  lightDistance,
+  lightIntensity,
   modelName,
   initialPosition,
   initialLookAt,
@@ -53,15 +57,20 @@ const ThreeDModel: React.FC<ThreeDModelProps> = ({
       mountRef.current.appendChild(renderer.domElement);
     }
 
-    const cursorLight = new THREE.PointLight(0xffffff, 150, 100);
+    const cursorLight = new THREE.PointLight(
+      0xffffff,
+      lightIntensity,
+      100,
+      1.7
+    );
     scene.add(cursorLight);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.01);
     scene.add(ambientLight);
 
     const updateLightPosition = (event: MouseEvent) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = -(event.clientY / window.innerHeight) * 2 + 1;
-      cursorLight.position.set(x * 50, y * 50, 10);
+      cursorLight.position.set(x * 50, y * 50, lightDistance);
     };
 
     window.addEventListener("mousemove", updateLightPosition);
@@ -113,6 +122,8 @@ const ThreeDModel: React.FC<ThreeDModelProps> = ({
       }
     };
   }, [
+    lightIntensity,
+    lightDistance,
     modelName,
     initialPosition,
     initialLookAt,
