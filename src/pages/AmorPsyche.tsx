@@ -115,7 +115,7 @@ function AmorPsyche() {
           </h1>
           <h1
             ref={titleRefRight}
-            className="absolute top-1/4 left-40 text-[40px] text-gray-500 cursor-pointer hover:text-white"
+            className="absolute top-1/4 left-48 text-[40px] text-gray-500 cursor-pointer hover:text-white"
             onClick={() => handleClick(TEXTS.UND, COORDINATES.UND)}
           >
             und

@@ -1,9 +1,11 @@
-import { useEffect, useRef, RefObject } from "react";
+import { useEffect, useRef, useState, RefObject } from "react";
 import { gsap } from "gsap";
 import { Link } from "react-router-dom";
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
 
 function Navbar() {
   const navbarRef: RefObject<HTMLDivElement> = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (navbarRef.current) {
@@ -15,18 +17,41 @@ function Navbar() {
     }
   }, []);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const openTicketsLink = () => {
+    window.open(
+      "https://www.tiqets.com/en/louvre-museum-tickets-l124297/",
+      "_blank"
+    );
+  };
+
   return (
-    <div
-      ref={navbarRef}
-      className="w-full h-[50px] fixed top-0 left-0 z-10 bg-black"
-    >
-      <nav>
-        <ul className="text-gray-600 flex justify-center gap-16 p-2">
+    <div ref={navbarRef} className="w-full bg-black">
+      <nav className="flex flex-col md:flex-row justify-between items-center p-4">
+        <Link to={"/"}>
+          <h1 className="text-gray-400 text-2xl md:text-4xl hover:text-white">
+            Louvre
+          </h1>
+        </Link>
+        <button
+          className="md:hidden text-gray-400 hover:text-white"
+          onClick={toggleMenu}
+        >
+          ☰
+        </button>
+        <ul
+          className={`text-gray-400 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-16 p-2 ${
+            isMenuOpen ? "block" : "hidden"
+          } md:flex`}
+        >
           <li className="hover:text-white">
             <Link to="/">Home</Link>
           </li>
           <li className="hover:text-white">
-            <Link to="/shop">Sculptures</Link>
+            <Link to="/sculptures">Sculptures</Link>
           </li>
           <li className="hover:text-white">
             <Link to="/about">About</Link>
@@ -35,6 +60,13 @@ function Navbar() {
             <Link to="/visit">Visit</Link>
           </li>
         </ul>
+        <button
+          className="bg-teal-500 rounded-2xl px-4 py-2 text-white hover:bg-teal-800 mt-4 md:mt-0"
+          onClick={openTicketsLink}
+        >
+          <BookOnlineIcon />
+          Tickets
+        </button>
       </nav>
     </div>
   );
