@@ -93,24 +93,6 @@ const HerculesArchelous: React.FC = () => {
         )
       );
 
-      // "Breathe" animation
-      const breatheAnimation = (ref: HTMLElement | null) => {
-        if (!ref) return;
-        animations.push(
-          gsap.to(ref, {
-            scale: 1.02,
-            duration: 1.1,
-            repeat: -1,
-            yoyo: true,
-            ease: "power1.inOut",
-          })
-        );
-      };
-
-      breatheAnimation(titleRefLeft.current);
-      breatheAnimation(titleRefRight.current);
-      breatheAnimation(titleRefCenter.current);
-
       // Cleanup animations on unmount
       return () => animations.forEach((animation) => animation.kill());
     }
@@ -162,21 +144,19 @@ const HerculesArchelous: React.FC = () => {
         <>
           <h1
             ref={titleRefLeft}
-            className="absolute top-1/4 left-10 text-[40px] text-gray-500 cursor-pointer hover:text-white"
-            onClick={() => handleClick(0)}
+            className="absolute top-1/4 left-10 text-[40px] text-gray-500 cursor-pointer "
           >
             Hercules
           </h1>
           <h1
             ref={titleRefCenter}
-            className="absolute top-1/4 left-64 text-[40px] text-gray-500 cursor-pointer hover:text-white"
+            className="absolute top-1/4 left-64 text-[40px] text-gray-500 cursor-pointer"
           >
             Fighting
           </h1>
           <h1
             ref={titleRefRight}
-            className="absolute top-1/3 left-40 text-[40px] text-gray-500 cursor-pointer hover:text-white"
-            onClick={() => handleClick(1)}
+            className="absolute top-1/3 left-40 text-[40px] text-gray-500 cursor-pointer "
           >
             Archelous
           </h1>

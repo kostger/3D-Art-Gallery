@@ -3,6 +3,8 @@ import { gsap } from "gsap";
 import ThreeDModel from "../components/ThreeDModel";
 import { TEXTS } from "../assets/constants";
 import * as THREE from "three";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 type Coordinates = {
   position: { x: number; y: number; z: number };
@@ -13,29 +15,53 @@ function AmorPsyche() {
   const titleRefLeft = useRef<HTMLHeadingElement | null>(null);
   const titleRefRight = useRef<HTMLHeadingElement | null>(null);
   const titleRefCenter = useRef<HTMLHeadingElement | null>(null);
-  const [modelLoaded, setModelLoaded] = useState(false);
-  const moveCameraRef = useRef<(coordinates: Coordinates) => void | null>(null);
+  const buttonsRef = useRef<HTMLDivElement | null>(null);
   const currentTextRef = useRef<HTMLParagraphElement | null>(null);
+  const moveCameraRef = useRef<(coordinates: Coordinates) => void | null>(null);
+  const currentIndexRef = useRef(0); // Track the current state index
+  const [modelLoaded, setModelLoaded] = useState(false);
 
-  const COORDINATES: Record<string, Coordinates> = {
-    AMOR: {
-      position: { x: -6, y: 7, z: 2 },
-      lookAt: { x: 0, y: 7, z: 0 },
+  const STATES = [
+    {
+      key: "AMOR",
+      coordinates: {
+        position: { x: -6, y: 7, z: 2 },
+        lookAt: { x: 0, y: 7, z: 0 },
+      },
+      text: TEXTS.AMOR,
     },
-    UND: {
-      position: { x: 1, y: 1, z: 8 },
-      lookAt: { x: 0, y: 7, z: 0 },
+
+    {
+      key: "PSYCHE",
+      coordinates: {
+        position: { x: -4, y: 7, z: 4 },
+        lookAt: { x: 0, y: 7, z: 0 },
+      },
+      text: TEXTS.PSYCHE,
     },
-    PSYCHE: {
-      position: { x: -4, y: 7, z: 4 },
-      lookAt: { x: 0, y: 7, z: 0 },
+    {
+      key: "STORY_1",
+      coordinates: {
+        position: { x: 1, y: 1, z: 8 },
+        lookAt: { x: 0, y: 7, z: 0 },
+      },
+      text: TEXTS.STORY_1,
     },
-  };
+    {
+      key: "STORY_2",
+      coordinates: {
+        position: { x: -6, y: 1, z: 8 },
+        lookAt: { x: 0, y: 7, z: 0 },
+      },
+      text: TEXTS.STORY_2,
+    },
+  ];
 
   useEffect(() => {
     if (modelLoaded) {
       const animations: gsap.core.Tween[] = [];
 
+      // Fade-in animations
       animations.push(
         gsap.fromTo(
           titleRefLeft.current,
@@ -51,31 +77,20 @@ function AmorPsyche() {
           titleRefCenter.current,
           { opacity: 0 },
           { opacity: 1, duration: 3, delay: 4 }
+        ),
+        gsap.fromTo(
+          buttonsRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 3, delay: 5 }
         )
       );
-
-      const breatheAnimation = (ref: HTMLElement | null) => {
-        if (!ref) return;
-        animations.push(
-          gsap.to(ref, {
-            scale: 1.02,
-            duration: 1.1,
-            repeat: -1,
-            yoyo: true,
-            ease: "power1.inOut",
-          })
-        );
-      };
-
-      breatheAnimation(titleRefLeft.current);
-      breatheAnimation(titleRefRight.current);
-      breatheAnimation(titleRefCenter.current);
 
       return () => animations.forEach((animation) => animation.kill());
     }
   }, [modelLoaded]);
 
-  const handleClick = (text: string, coordinates: Coordinates) => {
+  const handleClick = (index: number) => {
+    const { coordinates, text } = STATES[index];
     if (currentTextRef.current) {
       currentTextRef.current.textContent = text;
     }
@@ -89,6 +104,19 @@ function AmorPsyche() {
       { opacity: 0 },
       { opacity: 1, duration: 3, delay: 1.5 }
     );
+  };
+
+  const handleNext = () => {
+    const currentIndex = currentIndexRef.current;
+    handleClick(currentIndex);
+    currentIndexRef.current = (currentIndex + 1) % STATES.length;
+  };
+
+  const handlePrevious = () => {
+    const currentIndex = currentIndexRef.current;
+    handleClick(currentIndex);
+    currentIndexRef.current =
+      (currentIndex - 1 + STATES.length) % STATES.length;
   };
 
   return (
@@ -108,22 +136,19 @@ function AmorPsyche() {
         <>
           <h1
             ref={titleRefLeft}
-            className="absolute top-1/4 left-10 text-[40px] text-gray-500 cursor-pointer hover:text-white"
-            onClick={() => handleClick(TEXTS.AMOR, COORDINATES.AMOR)}
+            className="absolute top-1/4 left-10 text-[40px] text-gray-500 "
           >
             Amor
           </h1>
           <h1
             ref={titleRefRight}
-            className="absolute top-1/4 left-48 text-[40px] text-gray-500 cursor-pointer hover:text-white"
-            onClick={() => handleClick(TEXTS.UND, COORDINATES.UND)}
+            className="absolute top-1/4 left-48 text-[40px] text-gray-500"
           >
             und
           </h1>
           <h1
             ref={titleRefCenter}
-            className="absolute top-1/3 left-40 text-[40px] text-gray-500 hover:text-white cursor-pointer"
-            onClick={() => handleClick(TEXTS.PSYCHE, COORDINATES.PSYCHE)}
+            className="absolute top-1/3 left-40 text-[40px] text-gray-500 "
           >
             Psyche
           </h1>
@@ -131,6 +156,23 @@ function AmorPsyche() {
             ref={(el) => (currentTextRef.current = el)}
             className="absolute bottom-1/4 right-4 w-[300px] text-wrap text-gray-500"
           ></p>
+          <div
+            ref={buttonsRef}
+            className="flex absolute top-2/4 left-40 justify-evenly gap-10 items-center border border-white rounded-3xl px-5"
+          >
+            <button
+              className="text-[40px] text-gray-500 cursor-pointer hover:text-white"
+              onClick={handlePrevious}
+            >
+              <ArrowBackIosIcon />
+            </button>
+            <button
+              className="text-[40px] text-gray-500 cursor-pointer hover:text-white"
+              onClick={handleNext}
+            >
+              <ArrowForwardIosIcon />
+            </button>
+          </div>
         </>
       )}
     </div>

@@ -29,7 +29,7 @@ function Sculptures() {
     gsap.fromTo(
       sculpturesRef.current,
       { opacity: 0, x: -50 },
-      { opacity: 1, duration: 1, stagger: 0.5, delay: 2, x: 0 }
+      { opacity: 1, duration: 1, stagger: 0.5, delay: 1, x: 0 }
     );
   }, []);
 
