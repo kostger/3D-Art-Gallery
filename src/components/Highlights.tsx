@@ -75,7 +75,7 @@ const Highlights: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    highlightsRef.current.forEach((highlight, index) => {
+    highlightsRef.current.forEach((highlight) => {
       gsap.fromTo(
         highlight,
         { opacity: 0, y: 50 },
@@ -177,9 +177,11 @@ const Highlights: React.FC = () => {
               <div
                 key={subIndex}
                 ref={(el) => {
-                  highlightsRef.current[
-                    index * highlightGroup.length + subIndex
-                  ] = el;
+                  if (el) {
+                    highlightsRef.current[
+                      index * highlightGroup.length + subIndex
+                    ] = el;
+                  }
                 }}
               >
                 <HighlightItem

@@ -21,13 +21,6 @@ function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const openTicketsLink = () => {
-    window.open(
-      "https://www.tiqets.com/en/louvre-museum-tickets-l124297/",
-      "_blank"
-    );
-  };
-
   return (
     <div ref={navbarRef} className="w-full bg-black">
       <nav className="flex flex-col md:flex-row justify-between items-center p-4">

@@ -1,5 +1,3 @@
-import React from "react";
-
 function About() {
   return <div className=" h-full w-full text-white mt-16">About</div>;
 }

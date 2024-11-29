@@ -4,14 +4,7 @@ import { Link } from "react-router-dom";
 
 const Hero: React.FC = () => {
   const titleRef = useRef(null);
-  const buttonsRef = useRef([]);
-
-  const openTicketsLink = () => {
-    window.open(
-      "https://www.tiqets.com/en/louvre-museum-tickets-l124297/",
-      "_blank"
-    );
-  };
+  const buttonsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.fromTo(
