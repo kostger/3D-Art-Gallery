@@ -57,7 +57,11 @@ function Sculptures() {
       </div>
 
       {/* Main Content */}
-      <div className="p-8">
+      <div className="p-8 flex flex-col justify-start items-center">
+        <h2 className="text-3xl font-bold mb-4">3D Sculptures</h2>
+        <p className="italic text-sm text-gray-500">
+          Open on desktop for better experience
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {sculptures.map((sculpture, index) => (
             <Link

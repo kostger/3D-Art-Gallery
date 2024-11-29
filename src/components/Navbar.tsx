@@ -46,11 +46,12 @@ function Navbar() {
           <li className="hover:text-white">
             <Link to="/sculptures">Sculptures</Link>
           </li>
-          {/* <li className="hover:text-white">
-            <Link to="/about">About</Link>
-          </li> */}
+
           <li className="hover:text-white">
             <Link to="/visit">Visit</Link>
+          </li>
+          <li className="hover:text-white">
+            <Link to="/about">About</Link>
           </li>
         </ul>
         <Link to="/tickets">
