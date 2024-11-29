@@ -19,7 +19,7 @@ const sculptures = [
 function Sculptures() {
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
-  const sculpturesRef = useRef([]);
+  const sculpturesRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
   useEffect(() => {
     gsap.fromTo(

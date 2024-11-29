@@ -7,8 +7,8 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 type Coordinates = {
-  position: { x: number; y: number; z: number };
-  lookAt: { x: number; y: number; z: number };
+  position: THREE.Vector3;
+  lookAt: THREE.Vector3;
 };
 
 function AmorPsyche() {
@@ -17,7 +17,7 @@ function AmorPsyche() {
   const titleRefCenter = useRef<HTMLHeadingElement | null>(null);
   const buttonsRef = useRef<HTMLDivElement | null>(null);
   const currentTextRef = useRef<HTMLParagraphElement | null>(null);
-  const moveCameraRef = useRef<(coordinates: Coordinates) => void | null>(null);
+  const moveCameraRef = useRef<(coordinates: Coordinates) => void>(null!);
   const currentIndexRef = useRef(0); // Track the current state index
   const [modelLoaded, setModelLoaded] = useState(false);
 
@@ -25,8 +25,8 @@ function AmorPsyche() {
     {
       key: "AMOR",
       coordinates: {
-        position: { x: -6, y: 7, z: 2 },
-        lookAt: { x: 0, y: 7, z: 0 },
+        position: new THREE.Vector3(-6, 7, 2),
+        lookAt: new THREE.Vector3(0, 7, 0),
       },
       text: TEXTS.AMOR,
     },
@@ -34,24 +34,24 @@ function AmorPsyche() {
     {
       key: "PSYCHE",
       coordinates: {
-        position: { x: -4, y: 7, z: 4 },
-        lookAt: { x: 0, y: 7, z: 0 },
+        position: new THREE.Vector3(-4, 7, 4),
+        lookAt: new THREE.Vector3(0, 7, 0),
       },
       text: TEXTS.PSYCHE,
     },
     {
       key: "STORY_1",
       coordinates: {
-        position: { x: 1, y: 1, z: 8 },
-        lookAt: { x: 0, y: 7, z: 0 },
+        position: new THREE.Vector3(1, 1, 8),
+        lookAt: new THREE.Vector3(0, 7, 0),
       },
       text: TEXTS.STORY_1,
     },
     {
       key: "STORY_2",
       coordinates: {
-        position: { x: -6, y: 1, z: 8 },
-        lookAt: { x: 0, y: 7, z: 0 },
+        position: new THREE.Vector3(-6, 1, 8),
+        lookAt: new THREE.Vector3(0, 7, 0),
       },
       text: TEXTS.STORY_2,
     },

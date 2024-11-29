@@ -7,15 +7,15 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 type Coordinates = {
-  position: { x: number; y: number; z: number };
-  lookAt: { x: number; y: number; z: number };
+  position: THREE.Vector3;
+  lookAt: THREE.Vector3;
 };
 
 const HerculesArchelous: React.FC = () => {
   const [modelLoaded, setModelLoaded] = useState(false);
   const currentIndexRef = useRef(0); // Ref to track the current state index
 
-  const moveCameraRef = useRef<(coordinates: Coordinates) => void | null>(null);
+  const moveCameraRef = useRef<(coordinates: Coordinates) => void>();
   const currentTextRef = useRef<HTMLParagraphElement | null>(null);
   const titleRefLeft = useRef<HTMLHeadingElement | null>(null);
   const titleRefRight = useRef<HTMLHeadingElement | null>(null);
@@ -26,40 +26,40 @@ const HerculesArchelous: React.FC = () => {
     {
       key: "HERCULES",
       coordinates: {
-        position: { x: 20, y: -55, z: 15 },
-        lookAt: { x: 0, y: 6, z: 0 },
+        position: new THREE.Vector3(20, -55, 15),
+        lookAt: new THREE.Vector3(0, 6, 0),
       },
       text: HerculesTexts.HERCULES,
     },
     {
       key: "ARCHELOUS",
       coordinates: {
-        position: { x: -7, y: 10, z: 12 },
-        lookAt: { x: 0, y: 6, z: 0 },
+        position: new THREE.Vector3(-7, 10, 12),
+        lookAt: new THREE.Vector3(0, 6, 0),
       },
       text: HerculesTexts.ARCHELOUS,
     },
     {
       key: "FIGHTING",
       coordinates: {
-        position: { x: 100, y: -80, z: 80 },
-        lookAt: { x: 0, y: 6, z: 0 },
+        position: new THREE.Vector3(100, -80, 80),
+        lookAt: new THREE.Vector3(0, 6, 0),
       },
       text: HerculesTexts.STORY_1,
     },
     {
       key: "FIGHTING_2",
       coordinates: {
-        position: { x: 100, y: -80, z: -40 },
-        lookAt: { x: 0, y: 6, z: 0 },
+        position: new THREE.Vector3(100, -80, -40),
+        lookAt: new THREE.Vector3(0, 6, 0),
       },
       text: HerculesTexts.STORY_2,
     },
     {
       key: "RESET",
       coordinates: {
-        position: { x: 0, y: 0, z: 180 },
-        lookAt: { x: 0, y: 6, z: 0 },
+        position: new THREE.Vector3(0, 0, 180),
+        lookAt: new THREE.Vector3(0, 6, 0),
       },
       text: HerculesTexts.STORY_3,
     },
@@ -144,19 +144,19 @@ const HerculesArchelous: React.FC = () => {
         <>
           <h1
             ref={titleRefLeft}
-            className="absolute top-1/4 left-10 text-[40px] text-gray-500 cursor-pointer "
+            className="absolute top-1/4 left-10 text-[40px] text-gray-500  "
           >
             Hercules
           </h1>
           <h1
             ref={titleRefCenter}
-            className="absolute top-1/4 left-64 text-[40px] text-gray-500 cursor-pointer"
+            className="absolute top-1/4 left-64 text-[40px] text-gray-500 "
           >
             Fighting
           </h1>
           <h1
             ref={titleRefRight}
-            className="absolute top-1/3 left-40 text-[40px] text-gray-500 cursor-pointer "
+            className="absolute top-1/3 left-40 text-[40px] text-gray-500  "
           >
             Archelous
           </h1>

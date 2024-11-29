@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { gsap } from "gsap";
 type ThreeDModelProps = {
   lightIntensity: number;
@@ -38,7 +38,6 @@ const ThreeDModel: React.FC<ThreeDModelProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1;
-    renderer.outputEncoding = THREE.sRGBEncoding;
 
     const scene = new THREE.Scene();
     sceneRef.current = scene;
@@ -76,7 +75,7 @@ const ThreeDModel: React.FC<ThreeDModelProps> = ({
     window.addEventListener("mousemove", updateLightPosition);
 
     const gltfLoader = new GLTFLoader();
-    gltfLoader.load(modelName, (gltf) => {
+    gltfLoader.load(modelName, (gltf: { scene: any }) => {
       const model = gltf.scene;
       model.position.copy(initialModelPosition); // Set model's initial position
       scene.add(model);
