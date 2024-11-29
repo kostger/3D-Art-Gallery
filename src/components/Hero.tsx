@@ -46,7 +46,7 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 p-6 flex flex-col items-center justify-start md:items-start md:justify-center text-white">
         <h1
           ref={titleRef}
-          className="text-2xl w-1/3 md:text-4xl lg:text-6xl text-wrap"
+          className="text-3xl w-full md:w-1/3 md:text-4xl lg:text-6xl text-wrap"
         >
           Escape with the Louvre
         </h1>

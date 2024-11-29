@@ -88,7 +88,7 @@ const Tickets: React.FC = () => {
       {/* Header Section */}
       <div
         ref={headerRef}
-        className="relative w-full h-64 flex items-center justify-center"
+        className="relative w-full h-[66vh] md:h-[50vh] flex items-center justify-center"
       >
         <img
           src="/assets/pyramide.jpeg"

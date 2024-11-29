@@ -1,6 +1,31 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 function Visit() {
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const hoursRef = useRef(null);
+  const ticketPricesRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(titleRef.current, { x: -50 }, { x: 0, duration: 1 });
+    gsap.fromTo(
+      subtitleRef.current,
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 1, delay: 0.2 }
+    );
+    gsap.fromTo(
+      hoursRef.current,
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 1, delay: 0.2 }
+    );
+    gsap.fromTo(
+      ticketPricesRef.current,
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 1, delay: 0.2 }
+    );
+  }, []);
+
   return (
     <div className="relative ">
       {/* Background Image Section */}
@@ -11,8 +36,10 @@ function Visit() {
           className="absolute top-0 left-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 p-10 flex flex-col items-center justify-center md:items-start text-white bg-black bg-opacity-40">
-          <h1 className="text-2xl md:text-4xl lg:text-6xl">VISIT</h1>
-          <p className="mt-2 text-lg md:text-xl lg:text-2xl">
+          <h1 ref={titleRef} className="text-2xl md:text-4xl lg:text-6xl">
+            VISIT
+          </h1>
+          <p ref={subtitleRef} className="mt-2 text-lg md:text-xl lg:text-2xl">
             Everything you need to know before visiting the museum
           </p>
         </div>
@@ -21,7 +48,7 @@ function Visit() {
       {/* Content Section */}
       <div className="bg-gray-50 p-6 font-sans">
         {/* Hours & Admission Section */}
-        <div className="mt-6">
+        <div className="mt-6" ref={hoursRef}>
           <h2 className="text-xl font-bold text-blue-700 uppercase">
             Hours & Admission
           </h2>
@@ -68,7 +95,7 @@ function Visit() {
         </div>
 
         {/* Ticket Prices Section */}
-        <div className="mt-8">
+        <div className="mt-8" ref={ticketPricesRef}>
           <h2 className="text-xl font-bold text-blue-700 uppercase">
             Ticket Prices
           </h2>
