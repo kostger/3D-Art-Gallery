@@ -53,20 +53,19 @@ function Navbar() {
           <li className="hover:text-white">
             <Link to="/sculptures">Sculptures</Link>
           </li>
-          <li className="hover:text-white">
+          {/* <li className="hover:text-white">
             <Link to="/about">About</Link>
-          </li>
+          </li> */}
           <li className="hover:text-white">
             <Link to="/visit">Visit</Link>
           </li>
         </ul>
-        <button
-          className="bg-teal-500 rounded-2xl px-4 py-2 text-white hover:bg-teal-800 mt-4 md:mt-0"
-          onClick={openTicketsLink}
-        >
-          <BookOnlineIcon />
-          Tickets
-        </button>
+        <Link to="/tickets">
+          <button className="bg-teal-500 rounded-2xl px-4 py-2 text-white hover:bg-teal-800 mt-4 md:mt-0">
+            <BookOnlineIcon />
+            Tickets
+          </button>
+        </Link>
       </nav>
     </div>
   );

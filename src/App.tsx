@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import HerculesArchelous from "./pages/HerculesArchelous";
 import Sculptures from "./pages/Sculptures";
 import Visit from "./pages/Visit";
+import Tickets from "./pages/Tickets";
 function App() {
   return (
     <>
@@ -18,6 +19,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/hercules" element={<HerculesArchelous />} />
           <Route path="/visit" element={<Visit />} />
+          <Route path="/tickets" element={<Tickets />} />
           {/* Add more routes here */}
         </Routes>
       </div>

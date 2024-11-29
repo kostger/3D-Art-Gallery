@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { Link } from "react-router-dom";
 
 const Hero: React.FC = () => {
   const titleRef = useRef(null);
@@ -64,15 +65,16 @@ const Hero: React.FC = () => {
           </p>
         </div>
         <div className="flex flex-col gap-4 justify-center items-center">
-          <button
-            className="bg-teal-500 rounded-2xl p-3 hover:bg-teal-800"
-            onClick={openTicketsLink}
-          >
-            Book a ticket
-          </button>
-          <button className="bg-white text-black rounded-2xl p-3 hover:bg-gray-500">
-            Plan your visit
-          </button>
+          <Link to={"/tickets"}>
+            <button className="bg-teal-500 rounded-2xl p-3 hover:bg-teal-800">
+              Book a ticket
+            </button>
+          </Link>
+          <Link to={"/visit"}>
+            <button className="bg-white text-black rounded-2xl p-3 hover:bg-gray-500">
+              Plan your visit
+            </button>
+          </Link>
         </div>
       </div>
     </div>
