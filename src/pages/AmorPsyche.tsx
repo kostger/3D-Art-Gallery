@@ -154,7 +154,7 @@ function AmorPsyche() {
           </h1>
           <p
             ref={(el) => (currentTextRef.current = el)}
-            className="absolute bottom-1/4 right-4 w-[300px] py-8 text-wrap text-gray-500"
+            className="absolute bottom-1/4 right-4 w-[300px] pt-8 text-wrap text-gray-500"
           ></p>
           <div
             ref={buttonsRef}
